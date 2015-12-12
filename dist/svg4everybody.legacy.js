@@ -27,7 +27,7 @@
         function oninterval() {
             for (var use, svg, i = 0; i < uses.length; ) {
                 if (use = uses[i], svg = use.parentNode, svg && /svg/i.test(svg.nodeName)) {
-                    var src = use.getAttribute("xlink:href");
+                    var src = use.getAttribute("inline");
                     if (nosvg) {
                         var img = new Image(), width = svg.getAttribute("width"), height = svg.getAttribute("height");
                         img.src = fallback(src, svg, use), width && img.setAttribute("width", width), height && img.setAttribute("height", height), 

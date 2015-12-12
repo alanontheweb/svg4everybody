@@ -27,7 +27,7 @@
         function oninterval() {
             for (var use, svg, i = 0; i < uses.length; ) {
                 if (use = uses[i], svg = use.parentNode, svg && /svg/i.test(svg.nodeName)) {
-                    var src = use.getAttribute("xlink:href");
+                    var src = use.getAttribute("inline");
                     if (polyfill && (!validate || validate(src, svg, use))) {
                         var url = src.split("#"), url_root = url[0], url_hash = url[1];
                         if (svg.removeChild(use), url_root.length) {
