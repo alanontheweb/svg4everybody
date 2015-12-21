@@ -4,13 +4,33 @@
     }) : "object" == typeof exports ? module.exports = factory() : root.svg4everybody = factory();
 }(this, function() {
     /*! svg4everybody v2.0.0 | github.com/jonathantneal/svg4everybody */
-    function embed(svg, g) {
+    function embed(parent, g) {
+        var findParentSvg = function(node) {
+            if (node.parentNode.nodeName.toUpperCase() == 'SVG') {
+                return node.parentNode;
+            }
+            else if (node.parentNode) {
+                return findParentSvg(node.parentNode);
+            }
+            else {
+                return null;
+            }
+        }
+
+        var svg = null;
+        if (parent.nodeName.toUpperCase() == 'SVG') {
+            svg = parent;
+        }
+        else {
+            svg = findParentSvg(parent);
+        }
+
         if (g) {
             var viewBox = !svg.getAttribute("viewBox") && g.getAttribute("viewBox"), fragment = document.createDocumentFragment(), clone = g.cloneNode(!0);
             for (viewBox && svg.setAttribute("viewBox", viewBox); clone.childNodes.length; ) {
                 fragment.appendChild(clone.firstChild);
             }
-            svg.appendChild(fragment);
+            parent.appendChild(fragment);
         }
     }
     function loadreadystatechange(xhr) {
@@ -23,13 +43,24 @@
             }
         }, xhr.onreadystatechange();
     }
+
+
+
+
     function svg4everybody(opts) {
         function oninterval() {
             for (var use, svg, i = 0; i < uses.length; ) {
-                if (use = uses[i], svg = use.parentNode, svg && /svg/i.test(svg.nodeName)) {
+               
+                use = uses[i];
+                svg = use.parentNode;
+
+                //if (svg && /svg/i.test(svg.nodeName)) {
+                if (svg) {
+                    console.log(use);
                     var src = use.getAttribute("inline");
                     if (polyfill && (!validate || validate(src, svg, use))) {
                         var url = src.split("#"), url_root = url[0], url_hash = url[1];
+                        
                         if (svg.removeChild(use), url_root.length) {
                             var xhr = svgCache[url_root] = svgCache[url_root] || new XMLHttpRequest();
                             xhr.s || (xhr.s = [], xhr.open("GET", url_root), xhr.send()), xhr.s.push([ svg, url_hash ]), 
@@ -42,7 +73,7 @@
                     i += 1;
                 }
             }
-            requestAnimationFrame(oninterval, 17);
+            requestAnimationFrame(oninterval, 1000);
         }
         opts = opts || {};
         var uses = document.getElementsByTagName("use"), polyfill = "polyfill" in opts ? opts.polyfill : /\bEdge\/12\b|\bTrident\/[567]\b|\bVersion\/7.0 Safari\b/.test(navigator.userAgent) || (navigator.userAgent.match(/AppleWebKit\/(\d+)/) || [])[1] < 537, validate = opts.validate, requestAnimationFrame = window.requestAnimationFrame || setTimeout, svgCache = {};
