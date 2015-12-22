@@ -56,7 +56,7 @@
 
                 //if (svg && /svg/i.test(svg.nodeName)) {
                 if (svg) {
-                    console.log(use);
+                    // console.log(use);
                     var src = use.getAttribute("inline");
                     if (polyfill && (!validate || validate(src, svg, use))) {
                         var url = src.split("#"), url_root = url[0], url_hash = url[1];
